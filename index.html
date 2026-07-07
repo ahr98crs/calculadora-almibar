@@ -232,9 +232,11 @@
 
       warning.style.display = "none";
 
-      const agua = frutaKg * 0.91 * 0.37;
-      const azucar = frutaKg * 0.09 * 0.37;
-      const base = agua + azucar;
+      const factorAlmibar = 8 / 13.5;
+
+      const base = frutaKg * factorAlmibar;
+      const agua = base * 0.91;
+      const azucar = base * 0.09;
 
       const quimico2 = base * 0.01;
       const quimico1 = base * 0.008;
