@@ -1,4 +1,4 @@
-const CACHE_NAME = "calculadora-almibar-v5";
+const CACHE_NAME = "calculadora-almibar-v6";
 
 const FILES_TO_CACHE = [
   "./",
