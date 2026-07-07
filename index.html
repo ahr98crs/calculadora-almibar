@@ -177,6 +177,14 @@
             <td id="azucar"></td>
           </tr>
           <tr>
+            <td>Volumen azúcar</td>
+            <td id="volalmibar"></td>
+          </tr>
+          <tr>
+            <td>Altura nivel</td>
+            <td id="alturatina"></td>
+          </tr>
+          <tr>
             <td>Base almíbar</td>
             <td id="base"></td>
           </tr>
@@ -237,10 +245,14 @@
       warning.style.display = "none";
 
       const factorAlmibar = 8 / 13.5;
+      const densidadalmibar = 1107;
 
       const base = frutaKg * factorAlmibar;
       const agua = base * 0.75;
       const azucar = base * 0.25;
+      const volalmibar = base / densidadalmibar
+      const alturatina = (volalmibar / (3.05 * 1.2)) * 100
+
       const cubetas = frutaKg / 13.5;
 
       const quimico2 = base * 0.001;
@@ -254,6 +266,8 @@
         agua,
         azucar,
         base,
+        volalmibar,
+        alturatina,
         cubetas,
         quimico1,
         quimico2,
@@ -264,6 +278,8 @@
       document.getElementById("agua").textContent = formato(agua);
       document.getElementById("azucar").textContent = formato(azucar);
       document.getElementById("base").textContent = formato(base);
+      document.getElementById("volalmibar").textContent = formato(volalmibar);
+      document.getElementById("alturatina").textContent = formato(alturatina);
       document.getElementById("cubetas").textContent = formato(cubetas);
       document.getElementById("quimico2").textContent = formato(quimico2);
       document.getElementById("quimico1").textContent = formato(quimico1);
@@ -283,6 +299,8 @@ Resultados:
 - Agua: ${formato(calculo.agua)} kg
 - Azúcar: ${formato(calculo.azucar)} kg
 - Base almíbar: ${formato(calculo.base)} kg
+- Volumen almibar: ${formato(calculo.volalmibar)} m^3
+- Altura del agua: ${formato(calculo.alturatina)} cm
 - No. de cubetas: ${formato(calculo.cubetas)}
 - Químico 2: ${formato(calculo.quimico2)} kg
 - Químico 1: ${formato(calculo.quimico1)} kg
@@ -331,6 +349,8 @@ Resultados:
           Agua: ${formato(item.agua)} kg<br>
           Azúcar: ${formato(item.azucar)} kg<br>
           Base: ${formato(item.base)} kg<br>
+          Volumen Almibar: ${formato(item.volalmibar)} m^3<br>
+          Altura del agua: ${formato(item.alturatina)} cm<br>
           No. de cubetas: ${formato(item.cubetas || item.frutaKg / 13.5)}<br>
           Químico 2: ${formato(item.quimico2)} kg<br>
           Químico 1: ${formato(item.quimico1)} kg<br>
