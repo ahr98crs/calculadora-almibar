@@ -181,6 +181,10 @@
             <td id="base"></td>
           </tr>
           <tr>
+            <td>No. de cubetas</td>
+            <td id="cubetas"></td>
+          </tr>
+          <tr>
             <td>Químico 2</td>
             <td id="quimico2"></td>
           </tr>
@@ -237,6 +241,7 @@
       const base = frutaKg * factorAlmibar;
       const agua = base * 0.91;
       const azucar = base * 0.09;
+      const cubetas = frutaKg / 13.5;
 
       const quimico2 = base * 0.01;
       const quimico1 = base * 0.008;
@@ -249,6 +254,7 @@
         agua,
         azucar,
         base,
+        cubetas,
         quimico1,
         quimico2,
         quimico3,
@@ -258,6 +264,7 @@
       document.getElementById("agua").textContent = formato(agua);
       document.getElementById("azucar").textContent = formato(azucar);
       document.getElementById("base").textContent = formato(base);
+      document.getElementById("cubetas").textContent = formato(cubetas);
       document.getElementById("quimico2").textContent = formato(quimico2);
       document.getElementById("quimico1").textContent = formato(quimico1);
       document.getElementById("quimico3").textContent = formato(quimico3);
@@ -276,6 +283,7 @@ Resultados:
 - Agua: ${formato(calculo.agua)} kg
 - Azúcar: ${formato(calculo.azucar)} kg
 - Base almíbar: ${formato(calculo.base)} kg
+- No. de cubetas: ${formato(calculo.cubetas)}
 - Químico 2: ${formato(calculo.quimico2)} kg
 - Químico 1: ${formato(calculo.quimico1)} kg
 - Químico 3: ${formato(calculo.quimico3)} kg
@@ -323,6 +331,7 @@ Resultados:
           Agua: ${formato(item.agua)} kg<br>
           Azúcar: ${formato(item.azucar)} kg<br>
           Base: ${formato(item.base)} kg<br>
+          No. de cubetas: ${formato(item.cubetas || item.frutaKg / 13.5)}<br>
           Químico 2: ${formato(item.quimico2)} kg<br>
           Químico 1: ${formato(item.quimico1)} kg<br>
           Químico 3: ${formato(item.quimico3)} kg<br>
