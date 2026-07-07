@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculadora de Almíbar</title>
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#1f7a4d" />
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3f5f7;
+      margin: 0;
+      padding: 20px;
+      color: #222;
+    }
+
+    .container {
+      max-width: 520px;
+      margin: auto;
+      background: white;
+      padding: 22px;
+      border-radius: 14px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+    }
+
+    h1 {
+      text-align: center;
+      color: #1f5f3b;
+      margin-bottom: 5px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #666;
+      margin-bottom: 25px;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px;
+      font-size: 18px;
+      box-sizing: border-box;
+      border: 1px solid #bbb;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      margin-top: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .btn-calculate {
+      background: #1f7a4d;
+      color: white;
+    }
+
+    .btn-save {
+      background: #1d5fa7;
+      color: white;
+    }
+
+    .btn-share {
+      background: #25D366;
+      color: white;
+    }
+
+    .btn-clear {
+      background: #b22222;
+      color: white;
+    }
+
+    .results {
+      margin-top: 25px;
+      display: none;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+    }
+
+    th, td {
+      border-bottom: 1px solid #ddd;
+      padding: 10px;
+      text-align: right;
+    }
+
+    th:first-child,
+    td:first-child {
+      text-align: left;
+    }
+
+    th {
+      background: #eef3f0;
+    }
+
+    .history {
+      margin-top: 30px;
+    }
+
+    .history-item {
+      background: #f7f7f7;
+      border-left: 5px solid #1f7a4d;
+      padding: 12px;
+      margin-bottom: 12px;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    .small {
+      color: #666;
+      font-size: 13px;
+    }
+
+    .warning {
+      color: #b22222;
+      font-weight: bold;
+      margin-top: 10px;
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Almíbar</h1>
+    <div class="subtitle">Calculadora de formulación</div>
+
+    <label for="frutaKg">Kg de fruta recibida</label>
+    <input
+      type="number"
+      id="frutaKg"
+      placeholder="Ejemplo: 1000"
+      step="0.01"
+      min="0"
+    />
+
+    <button class="btn-calculate" onclick="calcularAlmibar()">Calcular</button>
+
+    <div id="warning" class="warning">
+      Ingresa una cantidad válida mayor que cero.
+    </div>
+
+    <div id="results" class="results">
+      <h2>Resultados</h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Ingrediente</th>
+            <th>kg</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Agua</td>
+            <td id="agua"></td>
+          </tr>
+          <tr>
+            <td>Azúcar</td>
+            <td id="azucar"></td>
+          </tr>
+          <tr>
+            <td>Base almíbar</td>
+            <td id="base"></td>
+          </tr>
+          <tr>
+            <td>Químico 2</td>
+            <td id="quimico2"></td>
+          </tr>
+          <tr>
+            <td>Químico 1</td>
+            <td id="quimico1"></td>
+          </tr>
+          <tr>
+            <td>Químico 3</td>
+            <td id="quimico3"></td>
+          </tr>
+          <tr>
+            <td>Químico 4</td>
+            <td id="quimico4"></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <button class="btn-save" onclick="guardarCalculo()">Guardar en historial</button>
+      <button class="btn-share" onclick="compartirWhatsApp()">Enviar / compartir por WhatsApp</button>
+    </div>
+
+    <div class="history">
+      <h2>Historial</h2>
+      <div id="historial"></div>
+      <button class="btn-clear" onclick="borrarHistorial()">Borrar historial</button>
+    </div>
+  </div>
+
+  <script>
+    let ultimoCalculo = null;
+
+    function formato(numero) {
+      return Number(numero).toLocaleString("es-MX", {
+        minimumFractionDigits: 3,
+        maximumFractionDigits: 3
+      });
+    }
+
+    function calcularAlmibar() {
+      const frutaKg = parseFloat(document.getElementById("frutaKg").value);
+      const warning = document.getElementById("warning");
+
+      if (isNaN(frutaKg) || frutaKg <= 0) {
+        warning.style.display = "block";
+        document.getElementById("results").style.display = "none";
+        return;
+      }
+
+      warning.style.display = "none";
+
+      const agua = frutaKg * 0.91 * 0.37;
+      const azucar = frutaKg * 0.09 * 0.37;
+      const base = agua + azucar;
+
+      const quimico2 = base * 0.01;
+      const quimico1 = base * 0.008;
+      const quimico3 = base * 0.0005;
+      const quimico4 = base * 0.0005;
+
+      ultimoCalculo = {
+        fecha: new Date().toLocaleString("es-MX"),
+        frutaKg,
+        agua,
+        azucar,
+        base,
+        quimico1,
+        quimico2,
+        quimico3,
+        quimico4
+      };
+
+      document.getElementById("agua").textContent = formato(agua);
+      document.getElementById("azucar").textContent = formato(azucar);
+      document.getElementById("base").textContent = formato(base);
+      document.getElementById("quimico2").textContent = formato(quimico2);
+      document.getElementById("quimico1").textContent = formato(quimico1);
+      document.getElementById("quimico3").textContent = formato(quimico3);
+      document.getElementById("quimico4").textContent = formato(quimico4);
+
+      document.getElementById("results").style.display = "block";
+    }
+
+    function generarMensaje(calculo) {
+      return `Cálculo de formulación: Almíbar
+
+Fecha: ${calculo.fecha}
+Fruta recibida: ${formato(calculo.frutaKg)} kg
+
+Resultados:
+- Agua: ${formato(calculo.agua)} kg
+- Azúcar: ${formato(calculo.azucar)} kg
+- Base almíbar: ${formato(calculo.base)} kg
+- Químico 2: ${formato(calculo.quimico2)} kg
+- Químico 1: ${formato(calculo.quimico1)} kg
+- Químico 3: ${formato(calculo.quimico3)} kg
+- Químico 4: ${formato(calculo.quimico4)} kg`;
+    }
+
+    function guardarCalculo() {
+      if (!ultimoCalculo) {
+        alert("Primero realiza un cálculo.");
+        return;
+      }
+
+      const historial = obtenerHistorial();
+      historial.unshift(ultimoCalculo);
+
+      localStorage.setItem("historialAlmibar", JSON.stringify(historial));
+      mostrarHistorial();
+
+      alert("Cálculo guardado en el historial.");
+    }
+
+    function obtenerHistorial() {
+      const datos = localStorage.getItem("historialAlmibar");
+      return datos ? JSON.parse(datos) : [];
+    }
+
+    function mostrarHistorial() {
+      const historial = obtenerHistorial();
+      const contenedor = document.getElementById("historial");
+
+      if (historial.length === 0) {
+        contenedor.innerHTML = `<p class="small">Todavía no hay cálculos guardados.</p>`;
+        return;
+      }
+
+      contenedor.innerHTML = "";
+
+      historial.forEach((item, index) => {
+        const div = document.createElement("div");
+        div.className = "history-item";
+
+        div.innerHTML = `
+          <strong>${index + 1}. ${item.fecha}</strong><br>
+          Fruta: ${formato(item.frutaKg)} kg<br>
+          Agua: ${formato(item.agua)} kg<br>
+          Azúcar: ${formato(item.azucar)} kg<br>
+          Base: ${formato(item.base)} kg<br>
+          Químico 2: ${formato(item.quimico2)} kg<br>
+          Químico 1: ${formato(item.quimico1)} kg<br>
+          Químico 3: ${formato(item.quimico3)} kg<br>
+          Químico 4: ${formato(item.quimico4)} kg
+        `;
+
+        contenedor.appendChild(div);
+      });
+    }
+
+    function compartirWhatsApp() {
+      if (!ultimoCalculo) {
+        alert("Primero realiza un cálculo.");
+        return;
+      }
+
+      const mensaje = generarMensaje(ultimoCalculo);
+      const url = "https://wa.me/?text=" + encodeURIComponent(mensaje);
+
+      window.open(url, "_blank");
+    }
+
+    function borrarHistorial() {
+      const confirmar = confirm("¿Seguro que deseas borrar todo el historial?");
+      if (!confirmar) return;
+
+      localStorage.removeItem("historialAlmibar");
+      mostrarHistorial();
+    }
+
+    mostrarHistorial();
+
+    if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("service-worker.js")
+            .then(function() {
+                console.log("Service Worker registrado correctamente.");
+            })
+            .catch(function(error) {
+                console.log("Error al registrar Service Worker:", error);
+            });
+    }
+
+  </script>
+</body>
+</html>
